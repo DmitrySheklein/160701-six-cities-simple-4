@@ -1,10 +1,9 @@
 #!/usr/bin/env node
 import CLIApplication from './app/cli.js';
-import HelpCommand from './core/cli-command/help.command.js';
-import ImportCommand from './core/cli-command/import.command.js';
-import VersionCommand from './core/cli-command/version.command.js';
 
-const myManager = new CLIApplication();
+const commandManager = new CLIApplication();
 
-myManager.registerCommands([new HelpCommand(), new VersionCommand(), new ImportCommand()]);
-myManager.processCommand(process.argv);
+commandManager.parseCommandFiles().then((commands) => {
+  commandManager.registerCommands(commands);
+  commandManager.processCommand(process.argv);
+});

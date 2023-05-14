@@ -1,4 +1,7 @@
 import { CliCommandInterface } from '../core/cli-command/cli-command.interface';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 type ParsedCommand = Record<string, string[]>;
 
@@ -6,8 +9,26 @@ export default class CLIApplication {
   private commands: Record<string, CliCommandInterface> = {};
 
   private defaultCommand = '--help';
+  private filename = fileURLToPath(import.meta.url);
+  private dirname = path.dirname(this.filename);
+  private pathDirName = '../core/cli-command';
+  private commandDirPath = path.resolve(this.dirname, ...this.pathDirName.split('/'));
 
-  public registerCommands(commandList: CliCommandInterface[]) {
+  public async parseCommandFiles(): Promise<CliCommandInterface[]> {
+    const commandFiles = fs.readdirSync(this.commandDirPath).filter((file) => file.includes('.command.'));
+    const commandInstances: CliCommandInterface[] = await Promise.all(
+      commandFiles.map(async (file) => {
+        // eslint-disable-next-line node/no-unsupported-features/es-syntax
+        const module = await import(`${this.pathDirName}/${file}`);
+
+        return new module.default();
+      }),
+    );
+
+    return commandInstances;
+  }
+
+  public async registerCommands(commandList: CliCommandInterface[]): Promise<void> {
     commandList.reduce((acc, command) => {
       const cliCommand = command;
       acc[cliCommand.name] = cliCommand;
