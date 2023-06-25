@@ -47,20 +47,20 @@ export abstract class Controller implements ControllerInterface {
     this.logger.info(`Route registered: ${route.method.toUpperCase()} ${route.path}`);
   }
 
-  public send<T>(res: Response, statusCode: number, data?: T): void {
-    this.addStaticPath(data as UnknownRecord);
+  public send<T extends UnknownRecord>(res: Response, statusCode: number, data: T): void {
+    this.addStaticPath(data);
     res.type('application/json').status(statusCode).json(data);
   }
 
-  public created<T>(res: Response, data: T): void {
+  public created<T extends UnknownRecord>(res: Response, data: T): void {
     this.send(res, StatusCodes.CREATED, data);
   }
 
   public noContent(res: Response): void {
-    this.send(res, StatusCodes.NO_CONTENT);
+    this.send(res, StatusCodes.NO_CONTENT, {});
   }
 
-  public ok<T>(res: Response, data: T): void {
+  public ok<T extends UnknownRecord>(res: Response, data: T): void {
     this.send(res, StatusCodes.OK, data);
   }
 }
