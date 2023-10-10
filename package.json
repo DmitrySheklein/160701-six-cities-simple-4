@@ -9,16 +9,16 @@
   ],
   "main": "main.js",
   "scripts": {
-    "start": "npm run build && node ./dist/main.js",
+    "start": "npm run build && node ./dist/src/main.js",
     "start:dev": "nodemon",
     "build": "npm run clean && npm run compile",
     "lint": "eslint src/ --ext .ts",
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
-    "ts": "ts-node",
+    "ts": "node --loader ts-node/esm",
     "mock:server": "json-server ./mocks/mock-server-data.json --host=127.0.0.1 --port 3123 ",
-    "import": "npm run ts ./src/main.cli.ts -- --import ./mocks/mock-data.tsv admin test 127.0.0.1 six-cities-simple secret",
-    "generate": "npm run mock:server & npm run ts ./src/main.cli.ts -- --generate 1 ./mocks/my-data.tsv http://127.0.0.1:3123/api"
+    "import": "npm run ts ./src/main.cli.ts -- --import ./mocks/mock-data.tsv admin test 127.0.0.1 six-cities secret",
+    "generate": "npm run mock:server & npm run ts ./src/main.cli.ts -- --generate 10 ./mocks/my-data.tsv http://127.0.0.1:3123/api"
   },
   "devDependencies": {
     "@types/convict": "6.1.1",
