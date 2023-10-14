@@ -1,4 +1,5 @@
 import cors from 'cors';
+import helmet from 'helmet';
 import { inject, injectable } from 'inversify';
 import { ConfigInterface } from '../core/config/config.interface.js';
 import { RestSchema } from '../core/config/rest.schema.js';
@@ -14,7 +15,7 @@ import { getFullServerPath } from '../core/helpers/index.js';
 import HttpError from '../core/errors/http-error.js';
 import { StatusCodes } from 'http-status-codes';
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from '../../specification/project.spec.json' assert { type: 'json' };
+import swaggerDocument from '../specification/project.spec.json' assert { type: 'json' };
 
 @injectable()
 export default class ApiApplication {
@@ -81,6 +82,7 @@ export default class ApiApplication {
 
   public async _initMiddleWare() {
     this.logger.info('Global middleware initialization…');
+    this.expressApplication.use(helmet());
     this.expressApplication.use(express.json());
     this.expressApplication.use('/uploads', express.static(this.config.get('UPLOAD_DIRECTORY')));
     this.expressApplication.use('/static', express.static(this.config.get('STATIC_DIRECTORY_PATH')));
