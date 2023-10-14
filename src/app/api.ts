@@ -1,4 +1,5 @@
 import cors from 'cors';
+import helmet from 'helmet';
 import { inject, injectable } from 'inversify';
 import { ConfigInterface } from '../core/config/config.interface.js';
 import { RestSchema } from '../core/config/rest.schema.js';
@@ -81,6 +82,7 @@ export default class ApiApplication {
 
   public async _initMiddleWare() {
     this.logger.info('Global middleware initialization…');
+    this.expressApplication.use(helmet());
     this.expressApplication.use(express.json());
     this.expressApplication.use('/uploads', express.static(this.config.get('UPLOAD_DIRECTORY')));
     this.expressApplication.use('/static', express.static(this.config.get('STATIC_DIRECTORY_PATH')));
