@@ -15,9 +15,9 @@
     "lint": "eslint src/ --ext .ts",
     "compile": "tsc -p tsconfig.json",
     "clean": "rimraf dist",
-    "ts": "node --loader ts-node/esm",
-    "mock:server": "json-server ./mocks/mock-server-data.json --host=127.0.0.1 --port 3123 ",
-    "import": "npm run ts ./src/main.cli.ts -- --import ./mocks/mock-data.tsv admin test 127.0.0.1 six-cities secret",
+    "ts": "ts-node",
+    "mock:server": "json-server ./mocks/mock-server-data.json --host=127.0.0.1 --port 3123",
+    "import": "npm run ts ./src/main.cli.ts -- --import ./mocks/mock-data.tsv admin test 127.0.0.1 six-cities-simple secret",
     "generate": "npm run mock:server & npm run ts ./src/main.cli.ts -- --generate 10 ./mocks/my-data.tsv http://127.0.0.1:3123/api"
   },
   "devDependencies": {
